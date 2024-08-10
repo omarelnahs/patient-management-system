@@ -16,17 +16,18 @@ import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 
 interface CustomProps {
-  control: Control<any>,
-  fieldType: FromFieldType,
-  name:string,
-  label?:string,
-  placeholder?:string,
-  iconSrc?:string,
-  iconAlt?:string,
-  disable?:boolean,
-  dataFromat?:string,
-  shwowTimeSelect?:boolean,
-  children?:React.ReactNode
+  control: Control<any>;
+  name: string;
+  label?: string;
+  placeholder?: string;
+  iconSrc?: string;
+  iconAlt?: string;
+  disabled?: boolean;
+  dateFormat?: string;
+  showTimeSelect?: boolean;
+  children?: React.ReactNode;
+  renderSkeleton?: (field: any) => React.ReactNode;
+  fieldType: FromFieldType;
 }
 
 const RenderField = ({field, props} : {field: any; props: CustomProps}) => {
@@ -56,12 +57,12 @@ const RenderField = ({field, props} : {field: any; props: CustomProps}) => {
     case FromFieldType.PHONE_INPUT:
       return (
         <FormControl>
-          <PhoneInput 
-            defaultCountry="EG" 
+          <PhoneInput
+            defaultCountry="EG"
             placeholder={placeholder}
             international
             withCountryCallingCode
-            value={field.value as string | undefined}
+            value={field.value as E164Number | undefined}
             onChange={field.onChange}
             className="input-phone"
           />
