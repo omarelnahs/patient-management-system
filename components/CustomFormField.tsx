@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image"
+import Image from "next/image";
 import {
   FormControl,
   FormDescription,
@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Control } from "react-hook-form";
-import { FromFieldType } from "../forms/PatientForm";
+import { FromFieldType } from "./forms/PatientForm";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 
@@ -30,8 +30,8 @@ interface CustomProps {
   fieldType: FromFieldType;
 }
 
-const RenderField = ({field, props} : {field: any; props: CustomProps}) => {
-  const { fieldType, iconSrc, iconAlt, placeholder, } = props
+const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
+  const { fieldType, iconSrc, iconAlt, placeholder } = props;
   switch (fieldType) {
     case FromFieldType.INPUT:
       return (
@@ -53,7 +53,7 @@ const RenderField = ({field, props} : {field: any; props: CustomProps}) => {
             />
           </FormControl>
         </div>
-      )
+      );
     case FromFieldType.PHONE_INPUT:
       return (
         <FormControl>
@@ -71,11 +71,11 @@ const RenderField = ({field, props} : {field: any; props: CustomProps}) => {
     default:
       break;
   }
-}
+};
 
 const CustomFormField = (props: CustomProps) => {
   const { control, fieldType, name, label } = props;
-  
+
   return (
     <FormField
       control={control}
