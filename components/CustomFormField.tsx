@@ -1,19 +1,27 @@
-"use client";
-
+/* eslint-disable no-unused-vars */
+import { E164Number } from "libphonenumber-js/core";
 import Image from "next/image";
+import { Control } from "react-hook-form";
+import PhoneInput from "react-phone-number-input";
+
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Control } from "react-hook-form";
-import { FromFieldType } from "./forms/PatientForm";
-import "react-phone-number-input/style.css";
-import PhoneInput from "react-phone-number-input";
+} from "./ui/form";
+import { Input } from "./ui/input";
+
+export enum FormFieldType {
+  INPUT = "input",
+  TEXTAREA = "textarea",
+  PHONE_INPUT = "phoneInput",
+  CHECKBOX = "checkbox",
+  DATE_PICKER = "datePicker",
+  SELECT = "select",
+  SKELETON = "skeleton",
+}
 
 interface CustomProps {
   control: Control<any>;
@@ -27,54 +35,53 @@ interface CustomProps {
   showTimeSelect?: boolean;
   children?: React.ReactNode;
   renderSkeleton?: (field: any) => React.ReactNode;
-  fieldType: FromFieldType;
+  fieldType: FormFieldType;
 }
 
-const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
-  const { fieldType, iconSrc, iconAlt, placeholder } = props;
-  switch (fieldType) {
-    case FromFieldType.INPUT:
+const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
+  switch (props.fieldType) {
+    case FormFieldType.INPUT:
       return (
         <div className="flex rounded-md border border-dark-500 bg-dark-400">
           {props.iconSrc && (
             <Image
-              src={iconSrc}
+              src={props.iconSrc}
               height={24}
               width={24}
-              alt={iconAlt || "icon"}
+              alt={props.iconAlt || "icon"}
               className="ml-2"
             />
           )}
           <FormControl>
             <Input
-              placeholder={placeholder}
+              placeholder={props.placeholder}
               {...field}
               className="shad-input border-0"
             />
           </FormControl>
         </div>
       );
-    case FromFieldType.PHONE_INPUT:
+    case FormFieldType.PHONE_INPUT:
       return (
         <FormControl>
           <PhoneInput
-            defaultCountry="EG"
-            placeholder={placeholder}
+            defaultCountry="US"
+            placeholder={props.placeholder}
             international
             withCountryCallingCode
-            value={field.value as E164Number | undefined}
+            value={field.value}
             onChange={field.onChange}
             className="input-phone"
           />
         </FormControl>
       );
     default:
-      break;
+      return null;
   }
 };
 
 const CustomFormField = (props: CustomProps) => {
-  const { control, fieldType, name, label } = props;
+  const { control, name, label } = props;
 
   return (
     <FormField
@@ -82,11 +89,10 @@ const CustomFormField = (props: CustomProps) => {
       name={name}
       render={({ field }) => (
         <FormItem className="flex-1">
-          {fieldType !== FromFieldType.CHECKBOX && label && (
-            <FormLabel>{label}</FormLabel>
+          {props.fieldType !== FormFieldType.CHECKBOX && label && (
+            <FormLabel className="shad-input-label">{label}</FormLabel>
           )}
-
-          <RenderField field={field} props={props} />
+          <RenderInput field={field} props={props} />
 
           <FormMessage className="shad-error" />
         </FormItem>

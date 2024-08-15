@@ -4,20 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Form } from "@/components/ui/form";
-import CustomFormField from "../CustomFormField";
+import CustomFormField, { FormFieldType } from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
 import { useState } from "react";
 import { UserFormValidation } from "@/lib/validation";
 import { useRouter } from "next/navigation";
-export enum FromFieldType {
-  INPUT = "input",
-  TEXTAREA = "textarea",
-  PHONE_INPUT = "phoneinput",
-  CHECKBOX = "checkbox",
-  DATA_PICKER = "dataPicker",
-  SELECT = "select",
-  SKELETON = " skeleton",
-}
+import { createUser } from "@/lib/actions/patient.actions";
 
 const PatientForm = () => {
   const router = useRouter();
@@ -32,17 +24,17 @@ const PatientForm = () => {
     },
   });
 
-  function onSubmit({
+  async function onSubmit({
     name,
     email,
     phone,
   }: z.infer<typeof UserFormValidation>) {
     setIsLoading(true);
     try {
-      // const userData = { name, email, phone };
+      const userData = { name, email, phone };
 
-      // const user = await createUser(userData);
-      // if(user) router.push(`/patients/${user.id}/register`)
+      const user = await createUser(userData);
+      if (user) router.push(`/patients/${user.id}/register`);
     } catch (error) {
       console.log(error);
     }
@@ -52,11 +44,11 @@ const PatientForm = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex-1">
         <section className="mb-12 space-y-4">
-          <h1 className="header">Hi There 🖐️</h1>
+          <h1 className="header">Hi There 😚</h1>
           <p className="text-dark-700">Schedule you first appointment</p>
         </section>
         <CustomFormField
-          fieldType={FromFieldType.INPUT}
+          fieldType={FormFieldType.INPUT}
           control={form.control}
           name="name"
           label="Full name"
@@ -65,7 +57,7 @@ const PatientForm = () => {
           iconAlt="user"
         />
         <CustomFormField
-          fieldType={FromFieldType.INPUT}
+          fieldType={FormFieldType.INPUT}
           control={form.control}
           name="email"
           label="Email"
@@ -74,12 +66,13 @@ const PatientForm = () => {
           iconAlt="user"
         />
         <CustomFormField
-          fieldType={FromFieldType.PHONE_INPUT}
+          fieldType={FormFieldType.PHONE_INPUT}
           control={form.control}
           name="phone"
-          label="Phone Number"
-          placeholder="+20123456789"
+          label="Phone number"
+          placeholder="+1 123 456 7890"
         />
+
         <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
       </form>
     </Form>
